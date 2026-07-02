@@ -110,19 +110,6 @@ try {
       order: 22,
       story:
         "He brought focus and steadiness into his work. Those who knew him professionally remember someone thoughtful, composed, and dependable in the moments that mattered."
-    },
-    {
-      key: "fs4",
-      path: "/Users/oluwateniolasobande/Downloads/fs4.jpeg",
-      fallbackUrl:
-        "https://res.cloudinary.com/dkmv44eg9/image/upload/v1782950630/fs-tribute/gallery/fs4.jpg",
-      title: "Dressed With Dignity",
-      alt: "Femi Sobande smiling in traditional blue attire.",
-      year: "Celebration",
-      quote: "Grace can be quiet and still fill a room.",
-      order: 23,
-      story:
-        "In traditional dress, his presence carried elegance without effort. This memory feels celebratory: a portrait of confidence, culture, and the joy he shared with others."
     }
   ];
 
@@ -350,7 +337,7 @@ try {
       title: "Family, Culture, and Grace",
       description:
         "His life continues through the people he loved, the culture he honored, and the example he left behind.",
-      image: uploadedPhotos[3].imageUrl,
+      image: uploadedPhotos[2].imageUrl,
       quote: "A good life keeps speaking through the people it shaped.",
       order: 3
     }
