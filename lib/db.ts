@@ -16,9 +16,15 @@ function createPool() {
   const url = new URL(connectionString);
   url.searchParams.delete("sslmode");
 
+  const poolMax = Number(process.env.PG_POOL_MAX ?? (process.env.VERCEL ? "1" : "5"));
+
   return new Pool({
     connectionString: url.toString(),
-    ssl: { rejectUnauthorized: false }
+    ssl: { rejectUnauthorized: false },
+    max: Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 1,
+    idleTimeoutMillis: 5_000,
+    connectionTimeoutMillis: 5_000,
+    maxUses: 100
   });
 }
 
