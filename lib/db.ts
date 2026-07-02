@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { Pool, type QueryResultRow } from "pg";
 
 declare global {
@@ -26,9 +28,20 @@ if (process.env.NODE_ENV !== "production") {
   globalThis.fsPgPool = db;
 }
 
+let schemaReady: Promise<void> | null = null;
+
+async function ensureSchema() {
+  schemaReady ??= readFile(path.join(process.cwd(), "db/schema.sql"), "utf8").then((schema) =>
+    db.query(schema).then(() => undefined)
+  );
+
+  return schemaReady;
+}
+
 export async function query<T extends QueryResultRow>(
   text: string,
   params: unknown[] = []
 ) {
+  await ensureSchema();
   return db.query<T>(text, params);
 }

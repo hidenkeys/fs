@@ -10,6 +10,9 @@ const nextConfig = {
         hostname: "res.cloudinary.com"
       }
     ]
+  },
+  outputFileTracingIncludes: {
+    "/*": ["./db/schema.sql"]
   }
 };
 
