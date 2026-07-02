@@ -41,7 +41,7 @@ export function TributeWall({ tributes }: TributeWallProps) {
   }
 
   return (
-    <section id="tributes" className="overflow-hidden bg-cream py-24">
+    <section id="tributes" className="overflow-hidden bg-cream py-16 sm:py-24">
       <div className="section-shell">
         <Reveal className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <SectionHeading
@@ -56,19 +56,19 @@ export function TributeWall({ tributes }: TributeWallProps) {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search names, relationships, countries, memories"
-              className="h-14 w-full rounded-full border border-ink/10 bg-porcelain pl-12 pr-5 text-sm shadow-soft outline-none transition focus:border-gold"
+            className="h-12 w-full rounded-full border border-ink/10 bg-porcelain pl-12 pr-5 text-sm shadow-soft outline-none transition focus:border-gold sm:h-14"
             />
           </label>
         </Reveal>
 
-        <div className="relative mt-14 min-h-[620px]">
+        <div className="relative mt-10 md:mt-14 md:min-h-[620px]">
           <div className="absolute inset-x-0 top-12 h-72 rounded-full bg-gold/10 blur-3xl" />
           <div className="relative grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {ordered.map((tribute, index) => (
               <motion.article
                 key={tribute.id}
                 className={[
-                  "rounded-[8px] border p-6 shadow-soft backdrop-blur",
+                  "rounded-[8px] border p-5 shadow-soft backdrop-blur sm:p-6",
                   tribute.featured
                     ? "border-gold/50 bg-porcelain"
                     : "border-ink/10 bg-porcelain/78",
@@ -82,7 +82,7 @@ export function TributeWall({ tributes }: TributeWallProps) {
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="font-serif text-2xl font-semibold text-ink">{tribute.name}</p>
+                    <p className="font-serif text-xl font-semibold text-ink sm:text-2xl">{tribute.name}</p>
                     <p className="mt-1 text-sm text-smoke">
                       {tribute.relationship} · {tribute.country}
                     </p>
@@ -94,17 +94,17 @@ export function TributeWall({ tributes }: TributeWallProps) {
                   ) : null}
                 </div>
                 <p className="mt-5 line-clamp-6 text-sm leading-7 text-smoke">{tribute.message}</p>
-                <div className="mt-6 flex flex-wrap gap-2">
+                <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                   <Button
                     variant="secondary"
-                    className="min-h-10 px-4"
+                    className="min-h-10 w-full px-4 sm:w-auto"
                     onClick={() => copyLink(tribute.slug)}
                   >
                     <Copy className="h-4 w-4" />
                     Copy Link
                   </Button>
                   <Link
-                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full px-4 text-sm font-medium text-ink hover:bg-ink/5"
+                    className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full px-4 text-sm font-medium text-ink hover:bg-ink/5 sm:w-auto"
                     href={`/tributes/${tribute.slug}`}
                   >
                     <ExternalLink className="h-4 w-4" />

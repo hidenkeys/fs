@@ -5,6 +5,7 @@ export type Tribute = {
   relationship: string;
   country: string;
   message: string;
+  photoUrl?: string;
   createdAt: string;
   status: "pending" | "approved" | "rejected";
   featured?: boolean;
@@ -21,6 +22,17 @@ export type PhotoStory = {
   story: string;
   quote?: string;
   featured?: boolean;
+};
+
+export type MemoryStory = {
+  id: string;
+  name: string;
+  relationship: string;
+  country: string;
+  story: string;
+  featured?: boolean;
+  createdAt: string;
+  status: "pending" | "approved" | "rejected";
 };
 
 export type TimelineMilestone = {

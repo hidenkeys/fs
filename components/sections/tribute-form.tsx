@@ -12,6 +12,7 @@ import { tributeSchema, type TributeInput } from "@/lib/schema";
 
 export function TributeForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -21,14 +22,36 @@ export function TributeForm() {
     resolver: zodResolver(tributeSchema)
   });
 
-  function onSubmit() {
+  async function onSubmit(data: TributeInput) {
+    setSubmitError(null);
+    const formData = new FormData();
+    formData.set("name", data.name);
+    formData.set("relationship", data.relationship);
+    formData.set("country", data.country);
+    formData.set("message", data.message);
+
+    if (data.photo?.[0]) {
+      formData.set("photo", data.photo[0]);
+    }
+
+    const response = await fetch("/api/tributes", {
+      method: "POST",
+      body: formData
+    });
+
+    if (!response.ok) {
+      const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+      setSubmitError(payload?.error ?? "Unable to submit this tribute right now.");
+      return;
+    }
+
     setSubmitted(true);
     reset();
   }
 
   return (
-    <section id="tribute" className="bg-ink py-24 text-porcelain">
-      <div className="section-shell grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+    <section id="tribute" className="bg-ink py-16 text-porcelain sm:py-24">
+      <div className="section-shell grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10">
         <Reveal>
           <SectionHeading
             eyebrow="Leave a Tribute"
@@ -37,12 +60,12 @@ export function TributeForm() {
             tone="dark"
           />
         </Reveal>
-        <Reveal className="rounded-[8px] border border-white/10 bg-white/[0.06] p-5 shadow-soft backdrop-blur md:p-8">
+        <Reveal className="rounded-[8px] border border-white/10 bg-white/[0.06] p-4 shadow-soft backdrop-blur sm:p-5 md:p-8">
           {submitted ? (
             <div className="rounded-[8px] border border-gold/40 bg-gold/10 p-5">
-              <p className="font-serif text-3xl">Thank you for sharing this memory.</p>
+              <p className="font-serif text-2xl sm:text-3xl">Thank you for sharing this memory.</p>
               <p className="mt-3 text-sm leading-6 text-white/72">
-                In production, this would be stored in Supabase and held for family moderation.
+                Your tribute has been received and will appear publicly after family moderation.
               </p>
               <Button className="mt-6" variant="secondary" onClick={() => setSubmitted(false)}>
                 Write another tribute
@@ -69,13 +92,18 @@ export function TributeForm() {
                   {...register("photo")}
                   type="file"
                   accept="image/*"
-                  className="block w-full rounded-[8px] border border-white/12 bg-white/10 px-4 py-3 text-sm text-white/76 file:mr-4 file:rounded-full file:border-0 file:bg-gold file:px-4 file:py-2 file:text-sm file:font-semibold file:text-ink"
+                  className="block w-full rounded-[8px] border border-white/12 bg-white/10 px-3 py-3 text-sm text-white/76 file:mb-2 file:mr-3 file:rounded-full file:border-0 file:bg-gold file:px-4 file:py-2 file:text-sm file:font-semibold file:text-ink sm:px-4 sm:file:mb-0"
                 />
               </Field>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button className="w-full sm:w-auto" type="submit" disabled={isSubmitting}>
                 <Send className="h-4 w-4" />
-                Submit Tribute
+                {isSubmitting ? "Submitting..." : "Submit Tribute"}
               </Button>
+              {submitError ? (
+                <p className="rounded-[8px] border border-[#ffd7d7]/30 bg-[#ffd7d7]/10 p-3 text-sm text-[#ffd7d7]">
+                  {submitError}
+                </p>
+              ) : null}
             </form>
           )}
         </Reveal>

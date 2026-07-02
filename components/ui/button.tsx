@@ -42,6 +42,21 @@ export function LinkButton({
   variant = "primary",
   ...props
 }: LinkButtonProps) {
+  if (typeof props.href === "string" && props.href.startsWith("#")) {
+    return (
+      <a
+        className={cn(
+          "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold",
+          variants[variant],
+          className
+        )}
+        href={props.href}
+      >
+        {props.children}
+      </a>
+    );
+  }
+
   return (
     <Link
       className={cn(

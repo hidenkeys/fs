@@ -54,6 +54,12 @@ body {
   min-width: 0;
 }
 
+@media (max-width: 640px) {
+  .section-shell {
+    width: min(100% - 24px, 1160px);
+  }
+}
+
 .serif {
   font-family: var(--font-serif), Georgia, serif;
 }

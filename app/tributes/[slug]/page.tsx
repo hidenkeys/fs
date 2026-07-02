@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Copy, Flame } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { LinkButton } from "@/components/ui/button";
-import { tributes } from "@/lib/data";
+import { getTributeBySlug } from "@/lib/content";
 import { getShareUrl } from "@/lib/utils";
 import { ShareButton } from "./share-button";
 
@@ -13,13 +13,11 @@ type TributePageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
-  return tributes.map((tribute) => ({ slug: tribute.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: TributePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const tribute = tributes.find((item) => item.slug === slug);
+  const tribute = await getTributeBySlug(slug);
 
   if (!tribute) {
     return {
@@ -40,7 +38,7 @@ export async function generateMetadata({ params }: TributePageProps): Promise<Me
 
 export default async function TributePage({ params }: TributePageProps) {
   const { slug } = await params;
-  const tribute = tributes.find((item) => item.slug === slug && item.status === "approved");
+  const tribute = await getTributeBySlug(slug);
 
   if (!tribute) {
     notFound();

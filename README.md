@@ -13,7 +13,7 @@ A premium, peaceful memorial website for Femi Sobande (FS). The site is designed
 - Aiven PostgreSQL-ready data model
 - Cloudinary-ready image upload flow
 
-The current app uses typed fixture data in `lib/data.ts` so the experience can run immediately. Replace those fixtures with PostgreSQL queries when the database connection is wired into the public and admin workflows.
+The public site, admin view, shareable tribute pages, sitemap, gallery, and guest book metrics read from PostgreSQL. Cloudinary stores memorial photos and tribute uploads.
 
 ## Getting Started
 
@@ -24,7 +24,7 @@ npm run dev
 
 Open `http://localhost:3000`.
 
-The local admin prototype is at `/admin` and uses the demo passcode `demo`. Replace this with Supabase Auth before launch.
+The local admin prototype is at `/admin` and uses the demo passcode `demo`. Replace this with production authentication before giving anyone admin access.
 
 ## Environment
 
@@ -56,7 +56,9 @@ components/
   sections/                Homepage and admin feature sections
   ui/                      Reusable primitives
 lib/
-  data.ts                  Fixture content and settings
+  content.ts               PostgreSQL-backed content queries
+  db.ts                    PostgreSQL pool configuration
+  cloudinary.ts            Cloudinary upload helpers
   schema.ts                Tribute form validation
   types.ts                 Shared content types
   utils.ts                 Small helpers
@@ -83,18 +85,37 @@ public/
 
 ## Configuring Anniversary Mode
 
-Add known family dates in `lib/data.ts`:
+Add known family dates in the `settings` table using the `special_dates` key:
 
-```ts
-specialDates: [
+```json
+[
   {
-    label: "Birthday",
-    message: "Today we celebrate his birthday with gratitude and love.",
-    month: 1,
-    day: 1,
-    enabled: true
+    "label": "Birthday",
+    "message": "Today we celebrate his birthday with gratitude and love.",
+    "month": 1,
+    "day": 1,
+    "enabled": true
   }
 ]
+```
+
+The value should be stored as JSONB:
+
+```sql
+insert into settings (key, value)
+values (
+  'special_dates',
+  '[
+    {
+      "label": "Birthday",
+      "message": "Today we celebrate his birthday with gratitude and love.",
+      "month": 1,
+      "day": 1,
+      "enabled": true
+    }
+  ]'::jsonb
+)
+on conflict (key) do update set value = excluded.value, updated_at = now();
 ```
 
 When the current month and day match an enabled date, the homepage shows a subtle candle treatment and special message.
@@ -107,9 +128,20 @@ The schema for the Aiven PostgreSQL database is in `db/schema.sql`. Run it again
 psql "$DATABASE_URL" -f db/schema.sql
 ```
 
+## Production Seed
+
+Seed the production database with the approved gallery photos, starter tribute stories, timeline entries, map pins, and settings:
+
+```bash
+npm run db:seed
+```
+
+The seed uploads the approved photos to Cloudinary and writes their Cloudinary URLs into PostgreSQL. It is safe to rerun for the seeded gallery, timeline, tributes, and settings because the script uses stable slugs and unique titles.
+
 ## Content Maintenance
 
-- Replace placeholder images in `public/images` with real approved family photos.
-- Add tributes, map pins, timeline entries, and photo stories in `lib/data.ts` until Supabase is wired in.
+- Add and approve new tributes in PostgreSQL. Public pages only show approved tributes.
+- Tribute form uploads are stored in Cloudinary, saved as pending tributes, and added to the pending gallery queue when a photo is attached.
 - Keep alt text specific and descriptive for accessibility.
 - Keep homepage messages grateful and warm rather than heavy.
+- Do not commit `.env`; configure the same environment variables in Vercel.

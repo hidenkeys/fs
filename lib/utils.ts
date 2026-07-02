@@ -19,3 +19,13 @@ export function getShareUrl(path: string) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fs-tribute.example.com";
   return `${siteUrl}${path}`;
 }
+
+export function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/['"]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}

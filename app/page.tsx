@@ -1,38 +1,47 @@
 import { Footer } from "@/components/footer";
+import { GalleryPreview } from "@/components/sections/gallery-preview";
 import { GuestBook } from "@/components/sections/guest-book";
 import { Hero } from "@/components/sections/hero";
+import { MemoryStories } from "@/components/sections/memory-stories";
 import { MemorialMap } from "@/components/sections/memorial-map";
-import { PhotoStories } from "@/components/sections/photo-stories";
 import { RotatingQuote } from "@/components/sections/rotating-quote";
-import { Timeline } from "@/components/sections/timeline";
 import { TodayMemory } from "@/components/sections/today-memory";
 import { TributeForm } from "@/components/sections/tribute-form";
 import { TributeWall } from "@/components/sections/tribute-wall";
 import {
   getAnniversaryMode,
+  getApprovedMemoryStories,
+  getApprovedTributes,
+  getGalleryPhotos,
+  getGuestBookStats,
+  getMapPins,
   getTodaysMemory,
-  guestBookStats,
-  mapPins,
-  photoStories,
   rotatingQuotes,
-  timeline,
-  tributes
-} from "@/lib/data";
+} from "@/lib/content";
 
-export default function Home() {
-  const todaysMemory = getTodaysMemory();
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const [tributes, memoryStories, photoStories, guestBookStats, mapPins] = await Promise.all([
+    getApprovedTributes(),
+    getApprovedMemoryStories(),
+    getGalleryPhotos(),
+    getGuestBookStats(),
+    getMapPins()
+  ]);
+  const todaysMemory = getTodaysMemory(photoStories, tributes);
   const specialDate = getAnniversaryMode();
 
   return (
     <main>
       <Hero specialDate={specialDate} />
-      <TodayMemory memory={todaysMemory} />
+      {todaysMemory ? <TodayMemory memory={todaysMemory} /> : null}
       <GuestBook stats={guestBookStats} />
-      <PhotoStories stories={photoStories} />
+      <MemoryStories stories={memoryStories} />
+      <GalleryPreview photos={photoStories} />
       <MemorialMap pins={mapPins} />
-      <TributeWall tributes={tributes} />
       <RotatingQuote quotes={rotatingQuotes} />
-      <Timeline milestones={timeline} />
+      <TributeWall tributes={tributes} />
       <TributeForm />
       <Footer />
     </main>

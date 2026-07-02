@@ -37,10 +37,13 @@ create table if not exists gallery (
   year_label text,
   status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
   featured boolean not null default false,
+  sort_order integer not null default 0,
   created_at timestamptz not null default now()
 );
 
-create index if not exists gallery_status_created_at_idx on gallery (status, created_at desc);
+alter table gallery add column if not exists sort_order integer not null default 0;
+create unique index if not exists gallery_title_unique_idx on gallery (title);
+create index if not exists gallery_status_created_at_idx on gallery (status, featured desc, sort_order asc, created_at desc);
 
 create table if not exists timeline (
   id uuid primary key default gen_random_uuid(),
@@ -53,6 +56,7 @@ create table if not exists timeline (
   created_at timestamptz not null default now()
 );
 
+create unique index if not exists timeline_title_unique_idx on timeline (title);
 create index if not exists timeline_sort_order_idx on timeline (sort_order, created_at);
 
 create table if not exists candles (
@@ -83,6 +87,22 @@ create table if not exists photo_memories (
 
 create index if not exists photo_memories_status_created_at_idx on photo_memories (status, created_at desc);
 
+create table if not exists memory_stories (
+  id uuid primary key default gen_random_uuid(),
+  seed_key text unique,
+  name text not null,
+  relationship text not null,
+  country text not null,
+  story text not null,
+  status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
+  featured boolean not null default false,
+  created_at timestamptz not null default now(),
+  approved_at timestamptz
+);
+
+alter table memory_stories add column if not exists seed_key text unique;
+create index if not exists memory_stories_status_created_at_idx on memory_stories (status, featured desc, created_at desc);
+
 create table if not exists map_pins (
   id uuid primary key default gen_random_uuid(),
   city text,
@@ -93,6 +113,8 @@ create table if not exists map_pins (
   status text not null default 'approved' check (status in ('pending', 'approved', 'rejected')),
   created_at timestamptz not null default now()
 );
+
+create unique index if not exists map_pins_city_country_unique_idx on map_pins (city, country);
 
 create table if not exists settings (
   key text primary key,

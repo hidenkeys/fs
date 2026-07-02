@@ -1,12 +1,19 @@
 import type { MetadataRoute } from "next";
-import { tributes } from "@/lib/data";
+import { getApprovedTributes } from "@/lib/content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://fs-tribute.example.com";
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fs-tribute.example.com";
+  const tributes = await getApprovedTributes();
 
   return [
     {
       url: baseUrl,
+      lastModified: new Date()
+    },
+    {
+      url: `${baseUrl}/gallery`,
       lastModified: new Date()
     },
     ...tributes.map((tribute) => ({

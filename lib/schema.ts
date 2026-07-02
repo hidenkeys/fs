@@ -17,3 +17,15 @@ export const tributeSchema = z.object({
 });
 
 export type TributeInput = z.infer<typeof tributeSchema>;
+
+export const storySchema = z.object({
+  name: z.string().min(2, "Please enter your name."),
+  relationship: z.string().min(2, "Please share your relationship."),
+  country: z.string().min(2, "Please enter your country."),
+  story: z
+    .string()
+    .min(30, "Please write at least 30 characters.")
+    .max(1600, "Please keep the story under 1,600 characters.")
+});
+
+export type StoryInput = z.infer<typeof storySchema>;
