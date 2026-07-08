@@ -24,8 +24,8 @@ export async function POST(request: Request) {
   const { name, relationship, country, story } = parsed.data;
   const result = await query<{ id: string }>(
     `
-      insert into memory_stories (name, relationship, country, story, status, featured)
-      values ($1, $2, $3, $4, 'pending', false)
+      insert into memory_stories (name, relationship, country, story, status, featured, approved_at)
+      values ($1, $2, $3, $4, 'approved', false, now())
       returning id
     `,
     [name, relationship, country, story]

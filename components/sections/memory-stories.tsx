@@ -124,7 +124,7 @@ export function MemoryStories({ stories }: MemoryStoriesProps) {
               <div className="rounded-[8px] border border-gold/30 bg-gold/10 p-5">
                 <p className="font-serif text-2xl text-ink sm:text-3xl">Thank you for sharing this story.</p>
                 <p className="mt-3 text-sm leading-6 text-smoke">
-                  It has been received and will appear publicly after family moderation.
+                  It has been received and added to the rotating stories.
                 </p>
                 <Button className="mt-6" variant="secondary" onClick={() => setSubmitted(false)}>
                   Write another story

@@ -57,9 +57,9 @@ export async function POST(request: Request) {
   const tributeResult = await query<{ id: string }>(
     `
       insert into tributes (
-        slug, name, relationship, country, message, photo_url, status, pinned, featured
+        slug, name, relationship, country, message, photo_url, status, pinned, featured, approved_at
       )
-      values ($1, $2, $3, $4, $5, $6, 'pending', false, false)
+      values ($1, $2, $3, $4, $5, $6, 'approved', false, false, now())
       returning id
     `,
     [slugBase, name, relationship, country, message, photoUrl]
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
         insert into gallery (
           title, image_url, alt, story, year_label, status, featured
         )
-        values ($1, $2, $3, $4, $5, 'pending', false)
+        values ($1, $2, $3, $4, $5, 'approved', false)
       `,
       [
         `Photo memory from ${name}`,

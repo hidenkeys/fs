@@ -56,7 +56,7 @@ export function TributeForm() {
           <SectionHeading
             eyebrow="Leave a Tribute"
             title="Share a message for the family to hold."
-            copy="Tributes are designed for moderation before appearing publicly, keeping the wall respectful and personal."
+            copy="Tributes shared here appear on the wall so family and friends can read them as the memorial grows."
             tone="dark"
           />
         </Reveal>
@@ -65,7 +65,7 @@ export function TributeForm() {
             <div className="rounded-[8px] border border-gold/40 bg-gold/10 p-5">
               <p className="font-serif text-2xl sm:text-3xl">Thank you for sharing this memory.</p>
               <p className="mt-3 text-sm leading-6 text-white/72">
-                Your tribute has been received and will appear publicly after family moderation.
+                Your tribute has been received and added to the memorial wall.
               </p>
               <Button className="mt-6" variant="secondary" onClick={() => setSubmitted(false)}>
                 Write another tribute
