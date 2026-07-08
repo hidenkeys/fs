@@ -69,6 +69,11 @@ type MapPinRow = {
   message: string | null;
 };
 
+type TributeLocationRow = {
+  location: string;
+  tribute_count: number;
+};
+
 type MemoryStoryRow = {
   id: string;
   name: string;
@@ -121,6 +126,105 @@ function toMemoryStory(row: MemoryStoryRow): MemoryStory {
     featured: row.featured,
     createdAt: row.created_at.toISOString()
   };
+}
+
+const knownLocations: Record<
+  string,
+  { city: string; country: string; latitude: number; longitude: number }
+> = {
+  abeokuta: { city: "Abeokuta", country: "Nigeria", latitude: 7.1475, longitude: 3.3619 },
+  benin: {
+    city: "Cotonou",
+    country: "Benin Republic",
+    latitude: 6.3703,
+    longitude: 2.3912
+  },
+  cotonou: {
+    city: "Cotonou",
+    country: "Benin Republic",
+    latitude: 6.3703,
+    longitude: 2.3912
+  },
+  lagos: { city: "Lagos", country: "Nigeria", latitude: 6.5244, longitude: 3.3792 },
+  nigeria: { city: "Nigeria", country: "Nigeria", latitude: 9.082, longitude: 8.6753 },
+  nigerian: { city: "Nigeria", country: "Nigeria", latitude: 9.082, longitude: 8.6753 },
+  uk: {
+    city: "United Kingdom",
+    country: "United Kingdom",
+    latitude: 55.3781,
+    longitude: -3.436
+  },
+  "united kingdom": {
+    city: "United Kingdom",
+    country: "United Kingdom",
+    latitude: 55.3781,
+    longitude: -3.436
+  },
+  "united states": {
+    city: "United States",
+    country: "United States",
+    latitude: 39.8283,
+    longitude: -98.5795
+  },
+  "united states of america": {
+    city: "United States",
+    country: "United States",
+    latitude: 39.8283,
+    longitude: -98.5795
+  },
+  usa: {
+    city: "United States",
+    country: "United States",
+    latitude: 39.8283,
+    longitude: -98.5795
+  }
+};
+
+function normalizeLocationText(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N},\s]/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function coordinatesToMapPoint(longitude: number, latitude: number) {
+  return {
+    x: Math.max(4, Math.min(96, ((longitude + 180) / 360) * 100)),
+    y: Math.max(8, Math.min(92, ((90 - latitude) / 180) * 100))
+  };
+}
+
+function normalizeTributeLocation(location: string) {
+  const normalized = normalizeLocationText(location);
+  const matchedKey = Object.keys(knownLocations).find((key) => normalized.includes(key));
+
+  if (matchedKey) {
+    return knownLocations[matchedKey];
+  }
+
+  const [city, country] = normalized
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (country) {
+    const countryMatch = knownLocations[country];
+    if (countryMatch) {
+      return {
+        ...countryMatch,
+        city: city.replace(/\b\w/g, (letter) => letter.toUpperCase())
+      };
+    }
+  }
+
+  return null;
+}
+
+function tributeCountMessage(count: number) {
+  return count === 1
+    ? "1 tribute has been shared from this location."
+    : `${count} tributes have been shared from this location.`;
 }
 
 export async function getApprovedTributes() {
@@ -221,24 +325,79 @@ export async function getTimeline() {
 }
 
 export async function getMapPins() {
-  const result = await query<MapPinRow>(`
+  const [manualPins, tributeLocations] = await Promise.all([
+    query<MapPinRow>(`
     select city, country, latitude, longitude, message
     from map_pins
     where status = 'approved'
     order by created_at desc
-  `);
+  `),
+    query<TributeLocationRow>(`
+      select trim(country) as location, count(*)::int as tribute_count
+      from tributes
+      where status = 'approved' and nullif(trim(country), '') is not null
+      group by trim(country)
+      order by tribute_count desc, location asc
+    `)
+  ]);
 
-  return result.rows.map<MapPin>((row) => {
+  const pins = new Map<string, MapPin>();
+
+  for (const row of manualPins.rows) {
     const longitude = Number(row.longitude ?? 3.3792);
     const latitude = Number(row.latitude ?? 6.5244);
+    const point = coordinatesToMapPoint(longitude, latitude);
+    const city = row.city ?? row.country;
+    const key = `${city.toLowerCase()}|${row.country.toLowerCase()}`;
 
-    return {
-      city: row.city ?? "A visitor",
+    pins.set(key, {
+      city,
       country: row.country,
-      x: Math.max(4, Math.min(96, ((longitude + 180) / 360) * 100)),
-      y: Math.max(8, Math.min(92, ((90 - latitude) / 180) * 100)),
+      ...point,
       message: row.message ?? "Remembering him with gratitude."
-    };
+    });
+  }
+
+  const tributePinCounts = new Map<
+    string,
+    {
+      location: { city: string; country: string; latitude: number; longitude: number };
+      count: number;
+    }
+  >();
+
+  for (const row of tributeLocations.rows) {
+    const location = normalizeTributeLocation(row.location);
+    if (!location) continue;
+
+    const key = `${location.city.toLowerCase()}|${location.country.toLowerCase()}`;
+    const existing = tributePinCounts.get(key);
+
+    tributePinCounts.set(key, {
+      location,
+      count: (existing?.count ?? 0) + row.tribute_count
+    });
+  }
+
+  for (const [key, tributePin] of tributePinCounts) {
+    const point = coordinatesToMapPoint(
+      tributePin.location.longitude,
+      tributePin.location.latitude
+    );
+    const existing = pins.get(key);
+    const countMessage = tributeCountMessage(tributePin.count);
+
+    pins.set(key, {
+      city: tributePin.location.city,
+      country: tributePin.location.country,
+      ...point,
+      message: existing ? `${existing.message} ${countMessage}` : countMessage
+    });
+  }
+
+  return Array.from(pins.values()).sort((a, b) => {
+    const countryCompare = a.country.localeCompare(b.country);
+    return countryCompare || a.city.localeCompare(b.city);
   });
 }
 

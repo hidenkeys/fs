@@ -7,6 +7,10 @@ type MemorialMapProps = {
   pins: MapPinType[];
 };
 
+function formatLocation(pin: MapPinType) {
+  return pin.city === pin.country ? pin.country : `${pin.city}, ${pin.country}`;
+}
+
 export function MemorialMap({ pins }: MemorialMapProps) {
   return (
     <section id="map" className="overflow-hidden bg-porcelain py-16 sm:py-24">
@@ -72,7 +76,7 @@ export function MemorialMap({ pins }: MemorialMapProps) {
                     </span>
                     <div className="pointer-events-none absolute left-1/2 top-9 z-10 hidden w-56 -translate-x-1/2 rounded-[8px] border border-ink/10 bg-porcelain p-3 text-sm text-ink opacity-0 shadow-soft transition group-hover:opacity-100 sm:block">
                       <p className="font-semibold">
-                        {pin.city}, {pin.country}
+                        {formatLocation(pin)}
                       </p>
                       <p className="mt-1 text-smoke">{pin.message}</p>
                     </div>
@@ -94,11 +98,13 @@ export function MemorialMap({ pins }: MemorialMapProps) {
                   className="rounded-[8px] border border-ink/10 bg-porcelain p-4"
                 >
                   <p className="font-serif text-xl font-semibold leading-tight text-ink sm:text-2xl">
-                    {pin.city}
+                    {formatLocation(pin)}
                   </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-gold">
-                    {pin.country}
-                  </p>
+                  {pin.city !== pin.country ? (
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-gold">
+                      {pin.country}
+                    </p>
+                  ) : null}
                   <p className="mt-3 text-sm leading-6 text-smoke">{pin.message}</p>
                 </article>
               ))}

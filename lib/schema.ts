@@ -3,7 +3,7 @@ import { z } from "zod";
 export const tributeSchema = z.object({
   name: z.string().min(2, "Please enter your name."),
   relationship: z.string().min(2, "Please share your relationship."),
-  country: z.string().min(2, "Please enter your country."),
+  country: z.string().min(2, "Please enter your location."),
   message: z
     .string()
     .min(20, "Please write at least 20 characters.")

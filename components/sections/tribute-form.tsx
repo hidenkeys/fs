@@ -81,8 +81,12 @@ export function TributeForm() {
                   <input {...register("relationship")} className="field" />
                 </Field>
               </div>
-              <Field label="Country" error={errors.country?.message}>
-                <input {...register("country")} className="field" />
+              <Field label="Location" error={errors.country?.message}>
+                <input
+                  {...register("country")}
+                  className="field"
+                  placeholder="City, country"
+                />
               </Field>
               <Field label="Message" error={errors.message?.message}>
                 <textarea {...register("message")} rows={6} className="field min-h-40 resize-y" />
