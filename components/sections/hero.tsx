@@ -43,7 +43,7 @@ export function Hero({ specialDate }: HeroProps) {
           <div className="hidden items-center gap-6 text-sm text-white/78 md:flex">
             <Link href="/#stories" className="hover:text-white">Stories</Link>
             <Link href="/gallery" className="hover:text-white">Gallery</Link>
-            <Link href="/#tributes" className="hover:text-white">Tributes</Link>
+            <Link href="/tributes" className="hover:text-white">Tributes</Link>
             <Link href="/#map" className="hover:text-white">Map</Link>
             <Link href="/#guest-book" className="hover:text-white">Guest Book</Link>
           </div>

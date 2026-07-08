@@ -194,38 +194,7 @@ try {
     );
   }
 
-  const tributes = [
-    {
-      name: "Olusegun Adebanjo",
-      relationship: "School friend from Abeokuta",
-      country: "Nigeria",
-      slug: "olusegun-adebanjo-school-friend-abeokuta",
-      featured: true,
-      pinned: true,
-      message:
-        "Femi and I first became friends in our school days in Abeokuta. Even then, he carried himself with unusual confidence and kindness. He had a way of making serious moments lighter and ordinary days memorable. I remember his laughter, his loyalty, and the respect he showed everyone around him. His memory remains a blessing."
-    },
-    {
-      name: "Mrs. Yetunde Akinwale",
-      relationship: "Former colleague from his nursing days",
-      country: "Nigeria",
-      slug: "yetunde-akinwale-nursing-colleague",
-      featured: true,
-      pinned: false,
-      message:
-        "I worked with Femi during his nursing days, and what stood out most was his compassion. He treated people with patience and dignity, whether the day was easy or difficult. He was dependable, calm under pressure, and generous with encouragement. Those of us who served beside him will always remember his professional grace."
-    },
-    {
-      name: "Babatunde Ogunleye",
-      relationship: "Childhood friend from Abeokuta",
-      country: "Nigeria",
-      slug: "babatunde-ogunleye-childhood-friend-abeokuta",
-      featured: false,
-      pinned: false,
-      message:
-        "Femi was part of my earliest memories in Abeokuta. We grew up sharing stories, errands, jokes, and dreams about the future. He was strong but never harsh, playful but never careless. Seeing the life he built made many of us proud. I remember him with deep respect and gratitude."
-    }
-  ];
+  const tributes = [];
 
   for (const tribute of tributes) {
     await client.query(
@@ -256,35 +225,7 @@ try {
     );
   }
 
-  const memoryStories = [
-    {
-      seedKey: "school-friend-abeokuta-story",
-      name: "Olusegun Adebanjo",
-      relationship: "School friend from Abeokuta",
-      country: "Nigeria",
-      featured: true,
-      story:
-        "In Abeokuta, Femi was the friend who could make a tense day feel lighter. We studied together, walked home together, and shared the kind of jokes that only school friends remember properly. What stayed with me most was his loyalty. If he called you his friend, he stood by you."
-    },
-    {
-      seedKey: "nursing-colleague-story",
-      name: "Mrs. Yetunde Akinwale",
-      relationship: "Former nursing colleague",
-      country: "Nigeria",
-      featured: true,
-      story:
-        "During our nursing days, Femi treated people with a gentleness that never looked forced. He could be firm when work required it, but he never lost his humanity. Patients trusted him because he listened first. Colleagues respected him because he carried pressure with unusual calm."
-    },
-    {
-      seedKey: "childhood-abeokuta-story",
-      name: "Babatunde Ogunleye",
-      relationship: "Childhood friend from Abeokuta",
-      country: "Nigeria",
-      featured: true,
-      story:
-        "We knew Femi before life became complicated, when friendship meant errands, football, laughter, and long conversations about the future. Even as a boy, he had a steady confidence. He did not need to be the loudest person around; people still noticed him."
-    }
-  ];
+  const memoryStories = [];
 
   for (const memory of memoryStories) {
     await client.query(

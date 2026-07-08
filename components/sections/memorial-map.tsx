@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
 import { MapPin } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -11,7 +14,34 @@ function formatLocation(pin: MapPinType) {
   return pin.city === pin.country ? pin.country : `${pin.city}, ${pin.country}`;
 }
 
+function visibleWindow<T>(items: T[], startIndex: number, count: number) {
+  if (!items.length) return [];
+
+  return Array.from({ length: Math.min(count, items.length) }, (_, offset) => {
+    return items[(startIndex + offset) % items.length];
+  });
+}
+
 export function MemorialMap({ pins }: MemorialMapProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const orderedPins = useMemo(
+    () => [...pins].sort((a, b) => a.country.localeCompare(b.country) || a.city.localeCompare(b.city)),
+    [pins]
+  );
+  const activePins = visibleWindow(orderedPins, activeIndex, 2);
+  const pageCount = Math.max(1, Math.ceil(orderedPins.length / 2));
+  const activePage = Math.floor(activeIndex / 2);
+
+  useEffect(() => {
+    if (orderedPins.length <= 2) return;
+
+    const timer = window.setInterval(() => {
+      setActiveIndex((index) => ((Math.floor(index / 2) + 1) % pageCount) * 2);
+    }, 5000);
+
+    return () => window.clearInterval(timer);
+  }, [orderedPins.length, pageCount]);
+
   return (
     <section id="map" className="overflow-hidden bg-porcelain py-16 sm:py-24">
       <div className="section-shell">
@@ -63,7 +93,7 @@ export function MemorialMap({ pins }: MemorialMapProps) {
                 </g>
               </svg>
 
-              {pins.map((pin) => (
+              {orderedPins.map((pin) => (
                 <div
                   key={`${pin.city}-${pin.country}`}
                   className="group absolute"
@@ -92,7 +122,7 @@ export function MemorialMap({ pins }: MemorialMapProps) {
               Places Remembering Him
             </div>
             <div className="mt-5 grid gap-3 sm:mt-6">
-              {pins.map((pin) => (
+              {activePins.map((pin) => (
                 <article
                   key={`${pin.city}-${pin.country}-card`}
                   className="rounded-[8px] border border-ink/10 bg-porcelain p-4"
@@ -109,6 +139,27 @@ export function MemorialMap({ pins }: MemorialMapProps) {
                 </article>
               ))}
             </div>
+            {orderedPins.length > 2 ? (
+              <div className="mt-5 flex items-center justify-between gap-4">
+                <p className="text-sm text-smoke">
+                  Showing {activePins.length} of {orderedPins.length} places
+                </p>
+                <div className="flex gap-2">
+                  {Array.from({ length: pageCount }, (_, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      aria-label={`Show map locations ${index + 1}`}
+                      onClick={() => setActiveIndex(index * 2)}
+                      className={[
+                        "h-2.5 rounded-full transition",
+                        index === activePage ? "w-8 bg-gold" : "w-2.5 bg-ink/18"
+                      ].join(" ")}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </Reveal>
         </div>
       </div>

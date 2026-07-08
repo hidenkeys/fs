@@ -16,6 +16,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/gallery`,
       lastModified: new Date()
     },
+    {
+      url: `${baseUrl}/tributes`,
+      lastModified: new Date()
+    },
     ...tributes.map((tribute) => ({
       url: `${baseUrl}/tributes/${tribute.slug}`,
       lastModified: new Date(tribute.createdAt)

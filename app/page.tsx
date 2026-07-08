@@ -7,7 +7,7 @@ import { MemorialMap } from "@/components/sections/memorial-map";
 import { RotatingQuote } from "@/components/sections/rotating-quote";
 import { TodayMemory } from "@/components/sections/today-memory";
 import { TributeForm } from "@/components/sections/tribute-form";
-import { TributeWall } from "@/components/sections/tribute-wall";
+import { TributePreview } from "@/components/sections/tribute-preview";
 import {
   getAnniversaryMode,
   getApprovedMemoryStories,
@@ -41,7 +41,7 @@ export default async function Home() {
       <GalleryPreview photos={photoStories} />
       <MemorialMap pins={mapPins} />
       <RotatingQuote quotes={rotatingQuotes} />
-      <TributeWall tributes={tributes} />
+      <TributePreview tributes={tributes} />
       <TributeForm />
       <Footer />
     </main>

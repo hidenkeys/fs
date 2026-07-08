@@ -16,14 +16,14 @@ function createPool() {
   const url = new URL(connectionString);
   url.searchParams.delete("sslmode");
 
-  const poolMax = Number(process.env.PG_POOL_MAX ?? (process.env.VERCEL ? "1" : "5"));
+  const poolMax = Number(process.env.PG_POOL_MAX ?? "1");
 
   return new Pool({
     connectionString: url.toString(),
     ssl: { rejectUnauthorized: false },
     max: Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 1,
-    idleTimeoutMillis: 5_000,
-    connectionTimeoutMillis: 5_000,
+    idleTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 15_000,
     maxUses: 100
   });
 }
@@ -41,13 +41,53 @@ async function ensureSchema() {
     db.query(schema).then(() => undefined)
   );
 
-  return schemaReady;
+  try {
+    await schemaReady;
+  } catch (error) {
+    schemaReady = null;
+    throw error;
+  }
+}
+
+function isTransientDatabaseError(error: unknown) {
+  if (!(error instanceof Error)) return false;
+
+  const message = error.message.toLowerCase();
+
+  return (
+    message.includes("connection terminated") ||
+    message.includes("connection timeout") ||
+    message.includes("timeout exceeded") ||
+    message.includes("too many clients")
+  );
+}
+
+function wait(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
 
 export async function query<T extends QueryResultRow>(
   text: string,
   params: unknown[] = []
 ) {
-  await ensureSchema();
-  return db.query<T>(text, params);
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      await ensureSchema();
+      return await db.query<T>(text, params);
+    } catch (error) {
+      lastError = error;
+
+      if (!isTransientDatabaseError(error) || attempt === 2) {
+        throw error;
+      }
+
+      await wait(250 * (attempt + 1));
+    }
+  }
+
+  throw lastError;
 }

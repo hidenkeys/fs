@@ -325,21 +325,19 @@ export async function getTimeline() {
 }
 
 export async function getMapPins() {
-  const [manualPins, tributeLocations] = await Promise.all([
-    query<MapPinRow>(`
+  const manualPins = await query<MapPinRow>(`
     select city, country, latitude, longitude, message
     from map_pins
     where status = 'approved'
     order by created_at desc
-  `),
-    query<TributeLocationRow>(`
+  `);
+  const tributeLocations = await query<TributeLocationRow>(`
       select trim(country) as location, count(*)::int as tribute_count
       from tributes
       where status = 'approved' and nullif(trim(country), '') is not null
       group by trim(country)
       order by tribute_count desc, location asc
-    `)
-  ]);
+    `);
 
   const pins = new Map<string, MapPin>();
 

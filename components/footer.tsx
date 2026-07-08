@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Heart, Mail } from "lucide-react";
 import { FsLogo } from "@/components/ui/fs-logo";
 
@@ -12,10 +13,10 @@ export function Footer() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3 text-sm text-white/70">
-          <a className="inline-flex items-center gap-2 hover:text-white" href="#tribute">
+          <Link className="inline-flex items-center gap-2 hover:text-white" href="/#tribute">
             <Heart className="h-4 w-4" />
             Leave a Tribute
-          </a>
+          </Link>
           <a className="inline-flex items-center gap-2 hover:text-white" href="mailto:family@example.com">
             <Mail className="h-4 w-4" />
             Contact Family
