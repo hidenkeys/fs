@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" role="img" aria-labelledby="title desc">
+  <title id="title">Burial invitation for Olufemi Adebayo Sobande</title>
+  <desc id="desc">Service of Songs on Monday, 20th July 2026 at Elims Sanctuary and Burial Ceremony on Tuesday, 21st July 2026 at Redemption Memorial Garden.</desc>
+  <defs>
+    <clipPath id="heroClip">
+      <rect x="80" y="86" width="920" height="458" rx="28" />
+    </clipPath>
+    <clipPath id="qrClip">
+      <rect x="790" y="1084" width="126" height="126" rx="10" />
+    </clipPath>
+    <linearGradient id="heroShade" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#10100f" stop-opacity="0.08" />
+      <stop offset="0.58" stop-color="#10100f" stop-opacity="0.1" />
+      <stop offset="1" stop-color="#10100f" stop-opacity="0.62" />
+    </linearGradient>
+    <linearGradient id="paperGlow" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffaf0" />
+      <stop offset="0.5" stop-color="#f4eddf" />
+      <stop offset="1" stop-color="#efe4d2" />
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#2a251e" flood-opacity="0.14" />
+    </filter>
+    <style>
+      .serif { font-family: Georgia, "Times New Roman", serif; }
+      .sans { font-family: Avenir, Montserrat, Helvetica, Arial, sans-serif; }
+      .smallCaps { font-family: Avenir, Montserrat, Helvetica, Arial, sans-serif; font-weight: 700; letter-spacing: 0.18em; }
+      .ink { fill: #1f1d1a; }
+      .muted { fill: #6d665e; }
+      .gold { fill: #c9a227; }
+      .white { fill: #fffaf0; }
+      .line { stroke: #c9a227; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect width="1080" height="1350" fill="url(#paperGlow)" />
+  <rect x="34" y="34" width="1012" height="1282" rx="34" fill="none" stroke="#d8c894" stroke-width="2" />
+  <rect x="54" y="54" width="972" height="1242" rx="24" fill="none" stroke="#efe2bd" stroke-width="1.5" />
+
+  <g filter="url(#softShadow)">
+    <image href="images/femi-sobande-hero.png" x="80" y="86" width="920" height="458" preserveAspectRatio="xMidYMin slice" clip-path="url(#heroClip)" />
+    <rect x="80" y="86" width="920" height="458" rx="28" fill="url(#heroShade)" />
+  </g>
+
+  <g transform="translate(880 124)">
+    <circle cx="0" cy="0" r="50" fill="#fffaf0" fill-opacity="0.86" stroke="#d8bd55" stroke-width="3" />
+    <circle cx="0" cy="0" r="40" fill="none" stroke="#fffaf0" stroke-width="4" />
+    <text x="0" y="14" text-anchor="middle" class="serif ink" font-size="43" font-weight="700">FS</text>
+  </g>
+
+  <g transform="translate(118 423)">
+    <text class="smallCaps white" font-size="18">WITH GRATITUDE TO GOD</text>
+    <text y="44" class="serif white" font-size="50" font-weight="700">Service of Songs &amp;</text>
+    <text y="99" class="serif white" font-size="50" font-weight="700">Burial Invitation</text>
+  </g>
+
+  <g text-anchor="middle">
+    <text x="540" y="638" class="smallCaps gold" font-size="18">IN LOVING MEMORY OF</text>
+    <text x="540" y="728" class="serif ink" font-size="72" font-weight="700">Olufemi Adebayo</text>
+    <text x="540" y="806" class="serif ink" font-size="72" font-weight="700">Sobande</text>
+    <line x1="356" x2="724" y1="842" y2="842" class="line" />
+    <text x="540" y="890" class="sans muted" font-size="28">Born February 13, 1968  |  Died June 24, 2026</text>
+    <text x="540" y="932" class="sans ink" font-size="29" font-weight="700">Aged 58</text>
+  </g>
+
+  <g transform="translate(94 985)">
+    <rect x="0" y="0" width="430" height="184" rx="20" fill="#fffaf0" stroke="#ded2bc" stroke-width="2" />
+    <text x="34" y="50" class="smallCaps gold" font-size="16">SERVICE OF SONGS</text>
+    <text x="34" y="94" class="serif ink" font-size="34" font-weight="700">Monday, 20th July 2026</text>
+    <line x1="34" x2="396" y1="118" y2="118" stroke="#eadfcb" stroke-width="2" />
+    <text x="34" y="153" class="sans muted" font-size="26">Elims Sanctuary</text>
+  </g>
+
+  <g transform="translate(556 985)">
+    <rect x="0" y="0" width="430" height="184" rx="20" fill="#fffaf0" stroke="#ded2bc" stroke-width="2" />
+    <text x="34" y="50" class="smallCaps gold" font-size="16">BURIAL CEREMONY</text>
+    <text x="34" y="94" class="serif ink" font-size="34" font-weight="700">Tuesday, 21st July 2026</text>
+    <line x1="34" x2="396" y1="118" y2="118" stroke="#eadfcb" stroke-width="2" />
+    <text x="34" y="153" class="sans muted" font-size="25">Redemption Memorial Garden</text>
+  </g>
+
+  <g transform="translate(96 1217)">
+    <text class="sans muted" font-size="25">Survived by his brother, sister, wife, and children.</text>
+    <text y="48" class="sans ink" font-size="24" font-weight="700">Memorial website</text>
+    <text y="82" class="sans muted" font-size="21">https://fs-seven-liard.vercel.app/</text>
+  </g>
+
+  <g>
+    <rect x="776" y="1070" width="154" height="154" rx="18" fill="#fffaf0" stroke="#d8c894" stroke-width="2" />
+    <image href="fs-tribute-qr.png" x="790" y="1084" width="126" height="126" preserveAspectRatio="xMidYMid meet" clip-path="url(#qrClip)" />
+    <text x="853" y="1254" text-anchor="middle" class="smallCaps gold" font-size="13">SCAN TO VISIT</text>
+  </g>
+</svg>

@@ -14,7 +14,7 @@ export default async function GalleryPage() {
     <main>
       <header className="border-b border-ink/10 bg-porcelain">
         <nav className="section-shell flex items-center justify-between gap-4 py-4 sm:py-5">
-          <Link href="/" aria-label="Return to Femi Sobande memorial home">
+          <Link href="/" aria-label="Return to Olufemi Sobande memorial home">
             <FsLogo showName markClassName="bg-ink text-porcelain shadow-none" />
           </Link>
           <Link

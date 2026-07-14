@@ -62,10 +62,10 @@ export function GuestBook({ stats }: GuestBookProps) {
           />
           <div className="grid min-w-0 grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-[minmax(9.5rem,1.3fr)_repeat(4,minmax(7.5rem,1fr))]">
             <StatCard label="Visitors" value={currentStats.visitors} />
-            <StatCard label="Tributes" value={currentStats.tributes} />
+            <StatCard label="Tributes" value={currentStats.tributes} href="/tributes" />
             <StatCard label="Candles" value={currentStats.candles} />
             <StatCard label="Flowers" value={currentStats.flowers} />
-            <StatCard label="Countries" value={currentStats.countries} />
+            <StatCard label="Countries" value={currentStats.countries} href="#map" />
           </div>
         </Reveal>
 

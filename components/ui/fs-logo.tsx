@@ -23,13 +23,13 @@ export function FsLogo({ className, markClassName, showName = false }: FsLogoPro
       </span>
       {showName ? (
         <span className="leading-tight">
-          <span className="block font-serif text-xl font-semibold">Femi Sobande</span>
+          <span className="block font-serif text-xl font-semibold">Olufemi Sobande</span>
           <span className="block text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-gold">
             In Loving Memory
           </span>
         </span>
       ) : (
-        <span className="sr-only">Femi Sobande</span>
+        <span className="sr-only">Olufemi Sobande</span>
       )}
     </span>
   );

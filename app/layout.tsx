@@ -2,15 +2,15 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://fs-tribute.example.com"),
+  metadataBase: new URL("https://fs-seven-liard.vercel.app"),
   title: {
-    default: "In Loving Memory of Femi Sobande",
-    template: "%s | Femi Sobande"
+    default: "In Loving Memory of Olufemi Sobande",
+    template: "%s | Olufemi Sobande"
   },
   description:
-    "A peaceful digital memorial celebrating the life, kindness, wisdom, strength, and love of Femi Sobande.",
+    "A peaceful digital memorial celebrating the life, kindness, wisdom, strength, and love of Olufemi Sobande.",
   openGraph: {
-    title: "In Loving Memory of Femi Sobande",
+    title: "In Loving Memory of Olufemi Sobande",
     description:
       "A peaceful digital memorial where family and friends can share tributes, memories, candles, flowers, and stories.",
     images: [{ url: "/images/femi-sobande-hero.png", width: 1200, height: 630 }],
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "In Loving Memory of Femi Sobande",
-    description: "A timeless tribute to Femi Sobande.",
+    title: "In Loving Memory of Olufemi Sobande",
+    description: "A timeless tribute to Olufemi Sobande.",
     images: ["/images/femi-sobande-hero.png"]
   },
   icons: {

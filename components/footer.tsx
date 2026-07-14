@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Heart, Mail } from "lucide-react";
+import { Heart, Images, MessageCircleHeart } from "lucide-react";
 import { FsLogo } from "@/components/ui/fs-logo";
 
 export function Footer() {
@@ -17,10 +17,14 @@ export function Footer() {
             <Heart className="h-4 w-4" />
             Leave a Tribute
           </Link>
-          <a className="inline-flex items-center gap-2 hover:text-white" href="mailto:family@example.com">
-            <Mail className="h-4 w-4" />
-            Contact Family
-          </a>
+          <Link className="inline-flex items-center gap-2 hover:text-white" href="/tributes">
+            <MessageCircleHeart className="h-4 w-4" />
+            Read Tributes
+          </Link>
+          <Link className="inline-flex items-center gap-2 hover:text-white" href="/gallery">
+            <Images className="h-4 w-4" />
+            View Gallery
+          </Link>
         </div>
       </div>
     </footer>

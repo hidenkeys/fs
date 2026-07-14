@@ -16,7 +16,7 @@ export function formatNumber(value: number) {
 }
 
 export function getShareUrl(path: string) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fs-tribute.example.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fs-seven-liard.vercel.app";
   return `${siteUrl}${path}`;
 }
 

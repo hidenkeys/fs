@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin"]
     },
-    sitemap: "https://fs-tribute.example.com/sitemap.xml"
+    sitemap: "https://fs-seven-liard.vercel.app/sitemap.xml"
   };
 }

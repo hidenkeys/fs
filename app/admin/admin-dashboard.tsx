@@ -61,14 +61,14 @@ export function AdminDashboard({
           <SectionHeading
             eyebrow="Family Admin"
             title="Moderate memories and manage the archive."
-            copy="Records shown here come from Postgres. Action buttons are ready for the next moderation API pass."
+            copy="Records shown here come from Postgres. Moderation actions are disabled until the protected admin API is connected."
           />
           <div className="flex flex-wrap gap-3">
-            <Button variant="secondary">
+            <Button variant="secondary" disabled title="Export API is not connected yet">
               <Download className="h-4 w-4" />
               Export CSV
             </Button>
-            <Button variant="secondary">
+            <Button variant="secondary" disabled title="Export API is not connected yet">
               <Download className="h-4 w-4" />
               Export PDF
             </Button>
@@ -85,7 +85,7 @@ export function AdminDashboard({
         <section className="mt-10 rounded-[8px] border border-ink/10 bg-porcelain p-5 shadow-soft md:p-7">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <h2 className="font-serif text-3xl font-semibold text-ink">Tribute Moderation</h2>
-            <Button>
+            <Button disabled title="Photo upload moderation is not connected yet">
               <ImagePlus className="h-4 w-4" />
               Upload Photos
             </Button>
@@ -114,11 +114,11 @@ export function AdminDashboard({
                     </td>
                     <td className="rounded-r-[8px] px-4 py-4">
                       <div className="flex gap-2">
-                        <IconButton label="Approve"><Check className="h-4 w-4" /></IconButton>
-                        <IconButton label="Reject"><X className="h-4 w-4" /></IconButton>
-                        <IconButton label="Pin"><Pin className="h-4 w-4" /></IconButton>
-                        <IconButton label="Feature"><Star className="h-4 w-4" /></IconButton>
-                        <IconButton label="Delete"><Trash2 className="h-4 w-4" /></IconButton>
+                        <IconButton label="Approve unavailable"><Check className="h-4 w-4" /></IconButton>
+                        <IconButton label="Reject unavailable"><X className="h-4 w-4" /></IconButton>
+                        <IconButton label="Pin unavailable"><Pin className="h-4 w-4" /></IconButton>
+                        <IconButton label="Feature unavailable"><Star className="h-4 w-4" /></IconButton>
+                        <IconButton label="Delete unavailable"><Trash2 className="h-4 w-4" /></IconButton>
                       </div>
                     </td>
                   </tr>
@@ -135,7 +135,7 @@ export function AdminDashboard({
               className="mt-5 min-h-32 w-full rounded-[8px] border border-ink/10 bg-white p-4 text-sm leading-7 outline-none focus:border-gold"
               defaultValue={homepageQuote}
             />
-            <Button className="mt-4">Save Quote</Button>
+            <Button className="mt-4" disabled title="Settings API is not connected yet">Save Quote</Button>
           </div>
           <div className="rounded-[8px] border border-ink/10 bg-porcelain p-6 shadow-soft">
             <h2 className="font-serif text-3xl font-semibold text-ink">Gallery Queue</h2>
@@ -167,7 +167,8 @@ function IconButton({ label, children }: { label: string; children: React.ReactN
   return (
     <button
       type="button"
-      className="grid h-9 w-9 place-items-center rounded-full bg-white text-ink transition hover:bg-gold/18"
+      disabled
+      className="grid h-9 w-9 place-items-center rounded-full bg-white text-ink/35 transition disabled:cursor-not-allowed"
       aria-label={label}
       title={label}
     >

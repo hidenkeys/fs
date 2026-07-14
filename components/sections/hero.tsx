@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, Images, PenLine } from "lucide-react";
@@ -13,14 +14,52 @@ type HeroProps = {
   specialDate?: SpecialDate;
 };
 
+const navLinks = [
+  { label: "Stories", href: "/#stories", sectionId: "stories" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Tributes", href: "/tributes" },
+  { label: "Map", href: "/#map", sectionId: "map" },
+  { label: "Guest Book", href: "/#guest-book", sectionId: "guest-book" }
+];
+
 export function Hero({ specialDate }: HeroProps) {
   const reduceMotion = useReducedMotion();
+  const [activeSection, setActiveSection] = useState("home");
+
+  useEffect(() => {
+    const sectionIds = ["home", "today", "guest-book", "stories", "gallery-preview", "map", "tributes", "tribute"];
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visibleEntry?.target.id) {
+          setActiveSection(visibleEntry.target.id);
+        }
+      },
+      {
+        rootMargin: "-25% 0px -55% 0px",
+        threshold: [0.18, 0.35, 0.6]
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden bg-ink text-porcelain md:min-h-[92svh]">
       <Image
         src="/images/femi-sobande-hero.png"
-        alt="A restored portrait of Femi Sobande smiling warmly in a striped shirt."
+        alt="A restored portrait of Olufemi Sobande smiling warmly in a striped shirt."
         fill
         priority
         sizes="100vw"
@@ -37,15 +76,27 @@ export function Hero({ specialDate }: HeroProps) {
 
       <header className="absolute left-0 right-0 top-0 z-10">
         <nav className="section-shell flex items-center justify-between py-5">
-          <Link href="/" aria-label="Femi Sobande memorial home">
+          <Link href="/" aria-label="Olufemi Sobande memorial home">
             <FsLogo />
           </Link>
           <div className="hidden items-center gap-6 text-sm text-white/78 md:flex">
-            <Link href="/#stories" className="hover:text-white">Stories</Link>
-            <Link href="/gallery" className="hover:text-white">Gallery</Link>
-            <Link href="/tributes" className="hover:text-white">Tributes</Link>
-            <Link href="/#map" className="hover:text-white">Map</Link>
-            <Link href="/#guest-book" className="hover:text-white">Guest Book</Link>
+            {navLinks.map((link) => {
+              const isActive = link.sectionId ? activeSection === link.sectionId : false;
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={[
+                    "rounded-full px-1 py-2 transition hover:text-white",
+                    isActive ? "text-white underline decoration-gold decoration-2 underline-offset-8" : ""
+                  ].join(" ")}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         </nav>
       </header>

@@ -12,7 +12,9 @@ export function TodayMemory({ memory }: TodayMemoryProps) {
   const isPhoto = memory.kind === "photo";
   const title = isPhoto ? memory.item.title : `A tribute from ${memory.item.name}`;
   const copy = isPhoto ? memory.item.story : memory.item.message;
-  const href = isPhoto ? "#stories" : `/tributes/${memory.item.slug}`;
+  const href = isPhoto ? "/gallery" : `/tributes/${memory.item.slug}`;
+  const imageSrc = isPhoto ? memory.item.image : "/images/hero-memory.png";
+  const isRemoteImage = imageSrc.startsWith("http://") || imageSrc.startsWith("https://");
 
   return (
     <section id="today" className="bg-cream py-14 sm:py-20">
@@ -20,9 +22,10 @@ export function TodayMemory({ memory }: TodayMemoryProps) {
         <Reveal className="grid overflow-hidden rounded-[8px] border border-ink/10 bg-porcelain shadow-soft lg:grid-cols-[0.92fr_1.08fr]">
           <div className="relative min-h-[240px] sm:min-h-[320px]">
             <Image
-              src={isPhoto ? memory.item.image : "/images/hero-memory.png"}
+              src={imageSrc}
               alt={isPhoto ? memory.item.alt : "A peaceful memorial candle and flowers."}
               fill
+              unoptimized={isRemoteImage}
               sizes="(min-width: 1024px) 45vw, 100vw"
               className="object-cover"
             />

@@ -11,7 +11,7 @@ import { query } from "@/lib/db";
 import { dayOfYear } from "@/lib/utils";
 
 export const siteSettings = {
-  name: "Femi Sobande",
+  name: "Olufemi Sobande",
   initials: "FS",
   heroLine: "A life of kindness, wisdom, strength and love.",
   homepageQuote:

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Images, Maximize2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Images, Maximize2, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -13,11 +13,16 @@ type GalleryPreviewProps = {
   photos: PhotoStory[];
 };
 
+function isRemoteImage(src: string) {
+  return src.startsWith("http://") || src.startsWith("https://");
+}
+
 export function GalleryPreview({ photos }: GalleryPreviewProps) {
   const previewPhotos = useMemo(() => photos.slice(0, 10), [photos]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const thumbnailRailRef = useRef<HTMLDivElement>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const activePhoto = previewPhotos[activeIndex];
+  const lightboxPhoto = lightboxIndex === null ? null : previewPhotos[lightboxIndex];
   const hasMultiplePhotos = previewPhotos.length > 1;
 
   useEffect(() => {
@@ -36,16 +41,25 @@ export function GalleryPreview({ photos }: GalleryPreviewProps) {
   }, [hasMultiplePhotos, previewPhotos.length]);
 
   useEffect(() => {
-    const activeThumbnail = thumbnailRailRef.current?.querySelector(
-      `[data-gallery-thumbnail="${activeIndex}"]`
-    );
+    if (!lightboxPhoto) return;
 
-    activeThumbnail?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center"
-    });
-  }, [activeIndex]);
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setLightboxIndex(null);
+      if (event.key === "ArrowLeft") {
+        setLightboxIndex((index) =>
+          index === null ? null : (index - 1 + previewPhotos.length) % previewPhotos.length
+        );
+      }
+      if (event.key === "ArrowRight") {
+        setLightboxIndex((index) =>
+          index === null ? null : (index + 1) % previewPhotos.length
+        );
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxPhoto, previewPhotos.length]);
 
   function showPrevious() {
     setActiveIndex((index) => (index - 1 + previewPhotos.length) % previewPhotos.length);
@@ -53,6 +67,18 @@ export function GalleryPreview({ photos }: GalleryPreviewProps) {
 
   function showNext() {
     setActiveIndex((index) => (index + 1) % previewPhotos.length);
+  }
+
+  function showPreviousLightbox() {
+    setLightboxIndex((index) =>
+      index === null ? null : (index - 1 + previewPhotos.length) % previewPhotos.length
+    );
+  }
+
+  function showNextLightbox() {
+    setLightboxIndex((index) =>
+      index === null ? null : (index + 1) % previewPhotos.length
+    );
   }
 
   if (!activePhoto) return null;
@@ -91,6 +117,7 @@ export function GalleryPreview({ photos }: GalleryPreviewProps) {
                     src={activePhoto.image}
                     alt=""
                     fill
+                    unoptimized={isRemoteImage(activePhoto.image)}
                     sizes="(min-width: 1024px) 58vw, 100vw"
                     className="scale-110 object-cover opacity-25 blur-2xl"
                     aria-hidden="true"
@@ -99,12 +126,19 @@ export function GalleryPreview({ photos }: GalleryPreviewProps) {
                     src={activePhoto.image}
                     alt={activePhoto.alt}
                     fill
+                    unoptimized={isRemoteImage(activePhoto.image)}
                     priority={activeIndex === 0}
                     sizes="(min-width: 1024px) 58vw, 100vw"
                     className="object-contain p-3 sm:p-5"
                   />
                 </motion.div>
               </AnimatePresence>
+              <button
+                type="button"
+                onClick={() => setLightboxIndex(activeIndex)}
+                className="absolute inset-0 z-10 cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-gold"
+                aria-label={`Open ${activePhoto.title} in fullscreen`}
+              />
 
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/35 via-transparent to-transparent" />
 
@@ -114,7 +148,7 @@ export function GalleryPreview({ photos }: GalleryPreviewProps) {
               </div>
 
               {hasMultiplePhotos ? (
-                <div className="absolute bottom-4 right-4 flex gap-2 sm:bottom-5 sm:right-5">
+                <div className="absolute bottom-4 right-4 z-20 flex gap-2 sm:bottom-5 sm:right-5">
                   <button
                     type="button"
                     aria-label="Show previous gallery photo"
@@ -172,7 +206,6 @@ export function GalleryPreview({ photos }: GalleryPreviewProps) {
 
               <div>
                 <div
-                  ref={thumbnailRailRef}
                   className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:thin] [scrollbar-color:#C9A227_transparent]"
                   aria-label="Gallery photo selector"
                 >
@@ -207,6 +240,15 @@ export function GalleryPreview({ photos }: GalleryPreviewProps) {
                     );
                   })}
                 </div>
+                <div className="mt-3 h-1 overflow-hidden rounded-full bg-ink/10">
+                  <motion.div
+                    key={activeIndex}
+                    className="h-full rounded-full bg-gold"
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 7, ease: "linear" }}
+                  />
+                </div>
                 {hasMultiplePhotos ? (
                   <div className="mt-4 flex gap-1.5">
                     {previewPhotos.map((photo, index) => (
@@ -228,6 +270,73 @@ export function GalleryPreview({ photos }: GalleryPreviewProps) {
           </div>
         </Reveal>
       </div>
+
+      <AnimatePresence>
+        {lightboxPhoto && lightboxIndex !== null ? (
+          <motion.div
+            className="fixed inset-0 z-50 bg-ink/86 p-3 text-porcelain backdrop-blur-xl sm:p-5"
+            role="dialog"
+            aria-modal="true"
+            aria-label={lightboxPhoto.title}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="flex h-full flex-col overflow-hidden rounded-[18px] border border-white/10 bg-[#11100e]/84 shadow-[0_40px_120px_rgba(0,0,0,0.45)]">
+              <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-5">
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+                    {lightboxIndex + 1} / {previewPhotos.length}
+                  </p>
+                  <h3 className="truncate font-serif text-xl font-semibold sm:text-2xl">
+                    {lightboxPhoto.title}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setLightboxIndex(null)}
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/15 bg-white/8 text-white transition hover:bg-white/14"
+                  aria-label="Close homepage gallery viewer"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="relative min-h-0 flex-1">
+                <Image
+                  src={lightboxPhoto.image}
+                  alt={lightboxPhoto.alt}
+                  fill
+                  unoptimized={isRemoteImage(lightboxPhoto.image)}
+                  priority
+                  sizes="100vw"
+                  className="object-contain p-3 sm:p-6"
+                />
+                {hasMultiplePhotos ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={showPreviousLightbox}
+                      className="absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-black/30 text-white backdrop-blur transition hover:bg-black/48 sm:left-5"
+                      aria-label="Previous homepage gallery photo"
+                    >
+                      <ArrowLeft className="h-5 w-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={showNextLightbox}
+                      className="absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-black/30 text-white backdrop-blur transition hover:bg-black/48 sm:right-5"
+                      aria-label="Next homepage gallery photo"
+                    >
+                      <ArrowRight className="h-5 w-5" />
+                    </button>
+                  </>
+                ) : null}
+              </div>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </section>
   );
 }

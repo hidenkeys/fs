@@ -4,7 +4,7 @@ import { getApprovedTributes } from "@/lib/content";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fs-tribute.example.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fs-seven-liard.vercel.app";
   const tributes = await getApprovedTributes();
 
   return [
